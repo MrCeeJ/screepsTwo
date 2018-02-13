@@ -7,19 +7,18 @@ module.exports.loop = function () {
     log.tick();
     data.checkMemory();
 
-    let roomData;
     let currentRoom;
     for (const i in Memory.rooms) {
-        roomData = Memory.rooms[i];
-        currentRoom = Game.rooms[roomData.name];
+        currentRoom = Game.rooms[Memory.rooms[i].name];
 
         activateSafeMode();
-        removeDeadScreepsFromMemory();
+        cleanupDeadScreepsFromMemory();
         roomManager.runCreeps(currentRoom);
         roomManager.runTowers(currentRoom);
         roomManager.spawnCreeps(currentRoom);
-    }
+        roomManager.planRoom(currentRoom);
 
+    }
 
 
     function activateSafeMode() {
@@ -31,12 +30,10 @@ module.exports.loop = function () {
         }
     }
 
-    function removeDeadScreepsFromMemory() {
-        for (let i in Memory.creeps) {
-            //noinspection JSUnfilteredForInLoop
-            if (!Game.creeps[i]) {
-                //noinspection JSUnfilteredForInLoop
-                delete Memory.creeps[i];
+    function cleanupDeadScreepsFromMemory() {
+        for (const name in Memory.creeps) {
+            if (!Game.creeps[name]) {
+                delete Memory.creeps[name];
             }
         }
     }

@@ -36,8 +36,24 @@ const screepFactory = {
         const body = roleMiner.getBody(room.energyCapacityAvailable);
         const sources = roomUtils.findUnusedSources(room);
         const positions = roomUtils.findUnusedPositions(room, sources);
-        const memory = {role: 'miner', log: false, sourceId :sources[0] , position : positions[0]};
+        const memory = {role: 'miner', log: false, sourceId: sources[0], position: positions[0]};
         this.spawnScreep(room, body, 'miner', memory);
+    },
+    spawnReplacementMiner: function (room, oldMiner) {
+        const body = [];
+        for (let part in oldMiner.body) {
+            body.push(oldMiner.body[part].type);
+        }
+        const memory = {
+            role: 'miner',
+            sourceId: oldMiner.memory.sourceId,
+            position: oldMiner.memory.position,
+
+        };
+        this.spawnScreep(room, body, 'miner', memory);
+
+        oldMiner.memory.replaced = true;
+        log.object("Spawning replacement miner for :", pos);
     },
     spawnTransporter: function (room) {
         const body = roleTransporter.getBody(room.energyCapacityAvailable);

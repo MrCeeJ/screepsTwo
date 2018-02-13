@@ -7,6 +7,7 @@ const roleTower = require('ai.tower');
 const profiles = require('profiles');
 const screepFactory = require('screepFactory');
 const log = require('log');
+const planner = require('planner');
 
 const drones = [];
 const workers = [];
@@ -61,13 +62,24 @@ const roomManager = {
             log.message(room.name + " needs more drones " + drones.length + " / " + profile.maxDrones);
             screepFactory.spawnDrone(room);
         }
-        if (workers.length < profile.maxWorkers) {
-            log.message(room.name + " needs more workers " + workers.length + " / " + profile.maxWorkers);
-            screepFactory.spawnWorker(room);
-        }
         if (miners.length < profile.maxMiners) {
             log.message(room.name + " needs more miners " + miners.length + " / " + profile.maxMiners);
             screepFactory.spawnMiner(room);
+        } else if (miners.length === profile.maxMiners) {
+            let dyingMiners = [];
+            _.forEach(miners, m => {
+                if (!m.memory.replaced && m.ticksToLive < (m.memory.ticksToArrive + (m.body.length * 3))) {
+                    dyingMiners.push(m);
+                }
+            });
+            if (dyingMiners.length) {
+                log.message("Spawning replacement for :" + dyingMiners[0]);
+                screepFactory.spawnReplacementMiner(room, dyingMiners[0]);
+            }
+        }
+        if (workers.length < profile.maxWorkers) {
+            log.message(room.name + " needs more workers " + workers.length + " / " + profile.maxWorkers);
+            screepFactory.spawnWorker(room);
         }
         if (upgraders.length < profile.maxUpgraders) {
             log.message(room.name + " needs more upgraders " + upgraders.length + " / " + profile.maxUpgraders);
@@ -76,6 +88,12 @@ const roomManager = {
         if (transporters.length < profile.maxTransporters) {
             log.message(room.name + " needs more transporters " + transporters.length + " / " + profile.maxTransporters);
             screepFactory.spawnTransporter(room);
+        }
+    },
+    planRoom: function (room) {
+        if (Game.time % 10 === 0) {
+            log.message("planning room : " + room.name);
+            planner.planRoom(room)
         }
     }
 };
