@@ -1,0 +1,17 @@
+{
+  "name": "screeps",
+  "description": "Screeps AI Code",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MrCeeJ/screeps"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "coffeescript": "^2.1.0",
+    "grunt": "^1.0.1",
+    "grunt-cli": "^1.2.0",
+    "grunt-screeps": "^1.4.0",
+    "npm": "^5.6.0",
+    "require": "^2.4.20"
+  }
+}
