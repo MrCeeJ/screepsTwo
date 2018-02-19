@@ -4,7 +4,8 @@ const tech = require('tech');
 
 const planner = {
     planRoom: function (room) {
-        if (roomUtils.containsOnlyRoadConstructionSites(room)) {
+        let sites = roomUtils.getNonRoadConstructionSiteTypes(room);
+        if (sites.length === 0) {
             const oldTech =  Memory.rooms[room.name].techLevel;
             const newTech = tech.calculateTechLevel(room);
             if (oldTech !== newTech) {
@@ -13,10 +14,10 @@ const planner = {
                 techPlans[Memory.rooms[room.name].techLevel](room);
             }
             else {
-                log.message("Current tech level :"+oldTech);
+                log.message("Current tech level : "+oldTech);
             }
         } else {
-            log.message("Room: " + room.name + " still under construction.");
+            log.object("Room: " + room.name + " still under construction :", sites);
         }
     }
 };

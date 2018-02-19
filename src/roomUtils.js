@@ -74,6 +74,12 @@ const roomUtils = {
         }
         return spaces;
     },
+    getNonRoadConstructionSiteTypes: function (room) {
+        return _(room.find(FIND_CONSTRUCTION_SITES))
+            .filter(s => s.structureType !== STRUCTURE_ROAD)
+            .map(s => s.structureType)
+            .value();
+    },
     containsOnlyRoadConstructionSites: function (room) {
         let sites = _(room.find(FIND_CONSTRUCTION_SITES))
             .filter(s => s.structureType !== STRUCTURE_ROAD)

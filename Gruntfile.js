@@ -76,6 +76,6 @@ module.exports = function (grunt) {
     ;
     grunt.registerTask('default', ['clean', 'copy:screeps', 'screeps']);
     grunt.registerTask('private', ['clean', 'copy:screeps', 'rsync:private']);
-
+    grunt.registerTask('both', ['clean', 'copy:screeps', 'rsync:private', 'screeps']);
 }
 ;
