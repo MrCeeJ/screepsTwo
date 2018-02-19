@@ -6,15 +6,15 @@ const planner = {
     planRoom: function (room) {
         let sites = roomUtils.getNonRoadConstructionSiteTypes(room);
         if (sites.length === 0) {
-            const oldTech =  Memory.rooms[room.name].techLevel;
+            const oldTech = Memory.rooms[room.name].techLevel;
             const newTech = tech.calculateTechLevel(room);
             if (oldTech !== newTech) {
-                log.message("Room tech level upgraded! :"+newTech);
+                log.message("<<< tech level upgraded >>> :" + newTech);
                 Memory.rooms[room.name].techLevel = newTech;
                 techPlans[Memory.rooms[room.name].techLevel](room);
             }
             else {
-                log.message("Current tech level : "+oldTech);
+                log.message("Current tech level : " + oldTech);
             }
         } else {
             log.object("Room: " + room.name + " still under construction :", sites);
@@ -40,8 +40,7 @@ const BUILD_LINK = function (room) {
 };
 
 const BUILD_TOWERS = function (room) {
-    log.message("Attempted to build towers in room but function not implemented yet:", room.name);
-
+    roomUtils.buildTowers(room, 1);
 };
 
 const BUILD_STORES = function (room) {

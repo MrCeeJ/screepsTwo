@@ -21,7 +21,7 @@ const roomUtils = {
             .filter(s => s.structureType === structureType)
             .size();
     },
-    findUnusedSources: function(room) {
+    findUnusedSources: function (room) {
         const energySourceIds = Memory.rooms[room.name].energySourceIds;
         const usedSourceIds = _(room.find(FIND_MY_CREEPS))
             .filter(s => s.memory.role === 'miner')
@@ -41,7 +41,7 @@ const roomUtils = {
         }
         return ids;
     },
-    findUnusedPositions: function(room, sourceIds) {
+    findUnusedPositions: function (room, sourceIds) {
         let miningPositions = roomUtils.getMiningPositions(room, sourceIds);
         const usedPositions = _(room.find(FIND_MY_CREEPS))
             .filter(s => s.memory.role === 'miner')
@@ -93,7 +93,7 @@ const roomUtils = {
         return sites === 0;
     },
 
-    buildInitialContainers(room) {
+    buildInitialContainers: function (room) {
         const energyLocationIds = Memory.rooms[room.name].energySourceIds;
         const spawnIds = Memory.rooms[room.name].spawnIds;
         for (const e in energyLocationIds) {
@@ -142,7 +142,7 @@ const roomUtils = {
     findSpacesWithoutBuildingsOrSites: function (room, locations, energySource) {
         const spaces = [];
         for (const l in locations) {
-            const structures = room.lookForAt(LOOK_STRUCTURES, locations[l].x, locations[l].y);
+            const structures = _(room.lookForAt(LOOK_STRUCTURES, locations[l].x, locations[l].y)).reject(s => s.structureType === STRUCTURE_ROAD).value();
             const sites = room.lookForAt(LOOK_CONSTRUCTION_SITES, locations[l].x, locations[l].y);
 
             if (_(structures).size() === 0 && _(sites).size() === 0) {
@@ -161,7 +161,7 @@ const roomUtils = {
         return positions;
     },
 
-    connectContainersAndSpawns(room) {
+    connectContainersAndSpawns: function (room) {
         const spawnIds = Memory.rooms[room.name].spawnIds;
         const containerIds = _(room.find(FIND_STRUCTURES))
             .filter(s => s.structureType === STRUCTURE_CONTAINER)
@@ -198,19 +198,25 @@ const roomUtils = {
         roomUtils.buildRoadAlongPath(room, path);
     },
 
-    buildRoadAlongPath(room, path) {
+    buildRoadAlongPath: function (room, path) {
         for (const p in path) {
             room.createConstructionSite(path[p].x, path[p].y, STRUCTURE_ROAD);
         }
     },
 
-    getSpawns(room) {
+    getSpawns: function (room) {
         return _(room.find(FIND_STRUCTURES))
             .filter(s => s.structureType === STRUCTURE_SPAWN)
             .value();
     },
 
-    buildExtensions(room, number) {
+    buildExtensions: function (room, number) {
+        this.buildNextLatticeBuilding(room, STRUCTURE_EXTENSION, number);
+    },
+    buildTowers: function (room, number) {
+        this.buildNextLatticeBuilding(room, STRUCTURE_TOWER, number);
+    },
+    buildNextLatticeBuilding: function (room, structure, number) {
         let latticePosition = Memory.rooms[room.name].latticePosition;
         const spawnPos = roomUtils.getSpawns(room)[0].pos;
         for (let i = 0; i < number; i++) {
@@ -219,7 +225,7 @@ const roomUtils = {
             while (!found) {
                 position = roomUtils.getNextLatticePosition(spawnPos, latticePosition);
                 latticePosition++;
-                const result = position.createConstructionSite(STRUCTURE_EXTENSION);
+                const result = position.createConstructionSite(structure);
                 if (result === 0) {
                     found = true;
                 } else {
@@ -229,13 +235,12 @@ const roomUtils = {
         }
         Memory.rooms[room.name].latticePosition = latticePosition;
     },
-
-    getNextLatticePosition(pos, index) {
+    getNextLatticePosition: function (pos, index) {
         const offset = lattice[index];
         return new RoomPosition(pos.x + offset.x, pos.y + offset.y, pos.roomName);
     },
 
-    resetConstructionSites(room) {
+    resetConstructionSites: function (room) {
         log.message("Clearing construction sites.");
         Memory.rooms[room.name].resetConstructionSites = false;
         let sites = _(room.find(FIND_CONSTRUCTION_SITES))

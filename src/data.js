@@ -3,8 +3,8 @@ const tech = require('tech');
 
 const defaults = {
     name: "",
-    techLevel : "",
-    latticePosition : 0,
+    techLevel: "",
+    latticePosition: 0,
     spawnIds: [],
     energySourceIds: [],
     sourceContainerIds: [],
@@ -12,7 +12,7 @@ const defaults = {
 
 const data = {
 
-    checkMemory: function() {
+    checkMemory: function () {
         if (Memory.resetData === undefined || Memory.resetData === true || Memory.resetData === 'true' || Memory.rooms === undefined || Memory.rooms === []) {
             this.resetMemory();
         }
@@ -24,15 +24,14 @@ const data = {
 
         for (const i in Game.spawns) {
             const r = Game.spawns[i].room;
-            if (!Memory.rooms[r.name]){
-                let location = defaults;
-                location.name = r.name;
-                location.spawnIds = this.getSpawnIds(r);
-                location.energySourceIds = this.getSourceIds(r);
-                location.techLevel = tech.calculateTechLevel(r);
-                location.resetConstructionSites = false;
-                Memory.rooms[r.name] = location;
-            }
+            let location = defaults;
+            location.name = r.name;
+            location.spawnIds = this.getSpawnIds(r);
+            location.energySourceIds = this.getSourceIds(r);
+            location.techLevel = tech.calculateTechLevel(r);
+            location.resetConstructionSites = false;
+            Memory.rooms[r.name] = location;
+
         }
     },
     getSpawnIds: function (room) {

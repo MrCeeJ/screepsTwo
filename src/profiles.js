@@ -18,9 +18,17 @@ const basicProfile = {
 
 const level2Profile = {
     maxDrones: 0,
-    maxWorkers: 2,
+    maxWorkers: 1,
     maxMiners: 2,
-    maxUpgraders: 3,
+    maxUpgraders: 4,
+    maxTransporters: 1
+};
+
+const level3Profile = {
+    maxDrones: 0,
+    maxWorkers: 1,
+    maxMiners: 2,
+    maxUpgraders: 1,
     maxTransporters: 1
 };
 
@@ -29,6 +37,14 @@ const advancedProfile = {
     maxWorkers: 2,
     maxMiners: 2,
     maxUpgraders: 2,
+    maxTransporters: 1
+};
+
+const hiTechProfile = {
+    maxDrones: 0,
+    maxWorkers: 1,
+    maxMiners: 2,
+    maxUpgraders: 1,
     maxTransporters: 1
 };
 
@@ -46,22 +62,23 @@ const profiles = {
                 return level2Profile;
             case 'Energy_L1':
             case 'Tower_L0':
+                return level3Profile;
             case 'LEVEL_3':
-                return advancedProfile;
+                return level3Profile;
             case 'Energy_L2':
             case 'Storage_L0':
             case 'LEVEL_4' :
-                return advancedProfile;
+                return hiTechProfile;
             case 'Energy_L3':
             case 'Link_L0' :
             case 'Tower_L1':
             case 'LEVEL_5' :
-                return advancedProfile;
+                return hiTechProfile;
             case 'Energy_L4':
             case 'Link_L1' :
             case 'Extractor_L0':
             case 'LEVEL_6' :
-                return advancedProfile;
+                return hiTechProfile;
             default : {
                 log.message("Warning, tech level not covered in profiles", techLevel);
                 return basicProfile;

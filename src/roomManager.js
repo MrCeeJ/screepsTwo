@@ -82,9 +82,9 @@ const roomManager = {
             capacity = this.spawnBootstrap(room, capacity, profile);
             capacity = this.spawnDrones(room, capacity, profile);
             capacity = this.spawnMiners(room, capacity, profile);
+            capacity = this.spawnTransporters(room, capacity, profile);
             capacity = this.spawnWorkers(room, capacity, profile);
-            capacity = this.spawnUpgraders(room, capacity, profile);
-            this.spawnTransporters(room, capacity, profile);
+            this.spawnUpgraders(room, capacity, profile);
         } else {
             log.message(room.name + " : all spawns currently busy.");
         }
