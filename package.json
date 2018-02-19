@@ -11,7 +11,13 @@
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
     "grunt-screeps": "^1.4.0",
+    "grunt-screeps-customserver": "0.0.1",
     "npm": "^5.6.0",
     "require": "^2.4.20"
+  },
+  "devDependencies": {
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-rsync": "^2.0.1"
   }
 }
