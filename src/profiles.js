@@ -16,6 +16,14 @@ const basicProfile = {
     maxTransporters: 1
 };
 
+const level2Profile = {
+    maxDrones: 0,
+    maxWorkers: 2,
+    maxMiners: 2,
+    maxUpgraders: 3,
+    maxTransporters: 1
+};
+
 const advancedProfile = {
     maxDrones: 0,
     maxWorkers: 2,
@@ -33,8 +41,9 @@ const profiles = {
                 return startingProfile;
             case 'Energy_L0':
             case 'Containers_L0':
-            case 'LEVEL_2':
                 return advancedProfile;
+            case 'LEVEL_2':
+                return level2Profile;
             case 'Energy_L1':
             case 'Tower_L0':
             case 'LEVEL_3':

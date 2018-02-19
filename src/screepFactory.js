@@ -49,9 +49,7 @@ const screepFactory = {
     spawnMiner: function (room) {
         const body = roleMiner.getBody(room.energyCapacityAvailable);
         const sources = roomUtils.findUnusedSources(room);
-        log.object("Unused sources :",sources);
         const positions = roomUtils.findUnusedPositions(room, sources);
-        log.object("Unused positions for those sources",positions);
         const memory = {role: 'miner', log: false, sourceId: sources[0], position: positions[0]};
         this.spawnScreep(room, body, 'miner', memory);
     },

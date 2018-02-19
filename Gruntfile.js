@@ -23,11 +23,7 @@ module.exports = function (grunt) {
                     ptr: false
                 },
                 dist: {
-                    files: [
-                        {
-                            src: ['*.js'],
-                        }
-                    ]
+                    src: 'dist/*.js',
                 }
             },
             // Remove all files from the dist folder.

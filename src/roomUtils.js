@@ -28,11 +28,7 @@ const roomUtils = {
             .map(s => s.memory.sourceId)
             .value();
 
-        log.object("used sources ", usedSourceIds );
-       // return _.reject(energySourceIds, s => _.some(usedSourceIds, s));
-        return _.reject(energySourceIds, function(id) {
-            return _.find(usedSourceIds, {id});
-        });
+        return _.difference(energySourceIds, usedSourceIds);
     },
     findEnergySourceIdsInRoom: function (room) {
         const containers = _(room.find(FIND_STRUCTURES))
@@ -60,7 +56,6 @@ const roomUtils = {
 
         for (const source in energySources) {
             const spaces = roomUtils.nonWallPositionsNextToCoordinates(room, Game.getObjectById(energySources[source]).pos.x, Game.getObjectById(energySources[source]).pos.y);
-            log.object("spaces :", spaces);
             const target = _(spaces).sortBy(s => _(s.findPathTo(spawns[0].pos, {
                 ignoreCreeps: true,
                 ignoreRoads: true
