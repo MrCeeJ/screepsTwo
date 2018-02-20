@@ -44,7 +44,7 @@ const BUILD_TOWERS = function (room) {
 };
 
 const BUILD_STORES = function (room) {
-    log.message("Attempted to build stores in room but function not implemented yet:", room.name);
+    roomUtils.buildNextLatticeBuilding(room, STRUCTURE_STORAGE, 1);
 };
 
 const BUILD_EXTRACTOR = function (room) {

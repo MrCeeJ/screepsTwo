@@ -44,7 +44,7 @@ const hiTechProfile = {
     maxDrones: 0,
     maxWorkers: 1,
     maxMiners: 2,
-    maxUpgraders: 1,
+    maxUpgraders: 2,
     maxTransporters: 1
 };
 
