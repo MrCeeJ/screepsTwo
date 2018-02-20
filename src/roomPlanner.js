@@ -25,9 +25,14 @@ const planner = {
 const DO_NOTHING = function () {
 };
 
-const BUILD_EXTENSIONS = function (room) {
+const BUILD_INITIAL_EXTENSIONS = function (room) {
     log.message("Constructing extensions for room: " + JSON.stringify(room));
     roomUtils.buildExtensions(room, 5);
+};
+
+const BUILD_EXTENSIONS = function (room) {
+    log.message("Constructing extensions for room: " + JSON.stringify(room));
+    roomUtils.buildExtensions(room, 10);
 };
 
 const BUILD_CONTAINERS = function (room) {
@@ -56,10 +61,10 @@ const BUILD_EXTRACTOR = function (room) {
  */
 const techPlans = {
     'LEVEL_1': DO_NOTHING,
-    'Energy_L0': BUILD_EXTENSIONS,
+    'Energy_L0': BUILD_INITIAL_EXTENSIONS,
     'Containers_L0': BUILD_CONTAINERS,
     'LEVEL_2': DO_NOTHING,
-    'Energy_L1': BUILD_EXTENSIONS,
+    'Energy_L1': BUILD_INITIAL_EXTENSIONS,
     'Tower_L0': BUILD_TOWERS,
     'LEVEL_3': DO_NOTHING,
     'Energy_L2': BUILD_EXTENSIONS,

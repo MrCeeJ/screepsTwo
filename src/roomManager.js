@@ -85,8 +85,6 @@ const roomManager = {
             capacity = this.spawnTransporters(room, capacity, profile);
             capacity = this.spawnWorkers(room, capacity, profile);
             this.spawnUpgraders(room, capacity, profile);
-        } else {
-            log.message(room.name + " : all spawns currently busy.");
         }
     },
     spawnBootstrap: function (room, capacity, profile) {

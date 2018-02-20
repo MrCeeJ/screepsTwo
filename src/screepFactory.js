@@ -13,15 +13,19 @@ const screepFactory = {
         if (spawns.length > 0) {
             for (const s in spawns) {
                 if (spawns[s].spawning === null) {
-                    if (spawns[s].room.energyCapacityAvailable>= this.spawnCost(body)) {
+                    if (spawns[s].room.energyCapacityAvailable >= this.spawnCost(body)) {
                         const result = spawns[s].createCreep(body, null, memory ? memory : {role: role, log: false});
                         if (result === 0) {
                             log.object(role + " under construction", body);
                             return;
+                        } else if (result < 0) {
+                            log.message("Unable to spawn " + role, result);
                         }
-                        log.message("Unable to spawn " + role, result);
+                        else {
+                            log.object(role +" - "+result+ " under construction!", body);
+                        }
                     } else {
-                        log.message("Insufficient energy needed :"+this.spawnCost(body) +" found :"+spawns[s].energy);
+                        log.message("Insufficient energy needed :" + this.spawnCost(body) + " found :" + spawns[s].energy);
                     }
                 }
                 else {
@@ -73,14 +77,14 @@ const screepFactory = {
         const body = roleTransporter.getBody(room.energyCapacityAvailable);
         this.spawnScreep(room, body, 'transporter');
     },
-    spawnCost: function(body) {
+    spawnCost: function (body) {
         let cost = 0;
         for (const part in body) {
             cost += BODYPART_COST[body[part]];
         }
         return cost;
     },
-    getCapacity : function(room) {
+    getCapacity: function (room) {
         let count = 0;
         const spawns = room.find(FIND_MY_SPAWNS);
         for (const s in spawns) {
