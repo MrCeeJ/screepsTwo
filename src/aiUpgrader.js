@@ -12,7 +12,7 @@ const STATE_GATHERING = function (creep) {
         creep.memory.state = 'UPGRADING';
         return states[creep.memory.state](creep);
     }
-    return ai.gatherNearestDroppedEnergy(creep, creep.carryCapacity) || ai.gatherContainerEnergy(creep) || ai.harvestEnergy(creep);
+    return ai.gatherNearestDroppedEnergy(creep, creep.carryCapacity) || ai.gatherContainerEnergy(creep) || ai.gatherStoredEnergy(creep, creep.carryCapacity) || ai.harvestEnergy(creep);
 };
 
 const STATE_UPGRADING = function (creep) {

@@ -118,33 +118,22 @@ const roomUtils = {
         }
     },
     buildInitialLinks: function (room) {
-        const energyLocationIds = Memory.rooms[room.name].energySourceIds;
+        const positions = _(room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_CONTAINER}}))
+            .map(s => s.pos)
+            .value();
         const spawnIds = Memory.rooms[room.name].spawnIds;
-        let positions = roomUtils.getPositionsFromIds(room, energyLocationIds);
-        const energyPositions = _(positions).sortBy(s => _(s.findPathTo(Game.getObjectById(spawnIds[0]).pos)).size()).first();
-        if (energyPositions.length > 1) {
-            this.buildDestinationLinkForEnergyId(room, energyPositions[0]);
-            for (let i = 1; i < energyPositions.length; i++) {
-                this.buildSourceLinkForEnergyId(room, energyPositions[i]);
+        for (const pos in positions) {
+            const locations = this.nonWallPositionsNextToCoordinates(positions[pos]);
+            const emptyLocations = this.findSpacesWithoutBuildingsOrSites(room, locations);
+            const sortedPositions = _(emptyLocations).sortBy(s => _(s.findPathTo(Game.getObjectById(spawnIds[0]).pos)).size()).first();
+            if (sortedPositions.length > 0) {
+                room.createConstructionSite(sortedPositions[0].x, sortedPositions[0].y, STRUCTURE_LINK);
+            } else {
+                log.object("Unable to place link at :", positions[pos]);
             }
         }
     },
-    buildDestinationLinkForEnergyId: function (room, energyPos) {
-        let locations = roomUtils.nonWallsNextToLocation(room, energyPos);
-        if (roomUtils.hasBuildingOrSite(locations, STRUCTURE_LINK)) {
-            return;
-        }
-        let goodLocations = roomUtils.findSpacesWithoutBuildingsOrSites(room, locations, energyPos);
 
-        if (_(goodLocations).size() === 0) {
-            log.message("Warning, unable to find good site for destination Link");
-        }
-        else {
-            let positions = roomUtils.getPositions(room, goodLocations);
-            const containerLocation = _(positions).sortBy(s => _(s.findPathTo(Game.getObjectById(spawnIds[0]).pos)).size()).first();
-            room.createConstructionSite(containerLocation.x, containerLocation.y, STRUCTURE_LINK);
-        }
-    },
     nonWallsNextToLocation: function (room, pos) {
         const area = room.lookAtArea((pos.y) - 1, (pos.x) - 1, (pos.y) + 1, (pos.x) + 1, true);
         let spaces = [];
@@ -171,14 +160,14 @@ const roomUtils = {
         }
         return false;
     },
-    findSpacesWithoutBuildingsOrSites: function (room, locations, energySource) {
+    findSpacesWithoutBuildingsOrSites: function (room, locations) {
         const spaces = [];
         for (const l in locations) {
             const structures = _(room.lookForAt(LOOK_STRUCTURES, locations[l].x, locations[l].y)).reject(s => s.structureType === STRUCTURE_ROAD).value();
             const sites = room.lookForAt(LOOK_CONSTRUCTION_SITES, locations[l].x, locations[l].y).reject(s => s.structureType === STRUCTURE_ROAD).value();
 
             if (_(structures).size() === 0 && _(sites).size() === 0) {
-                log.object("Empty space found at [" + locations[l].x + "," + locations[l].y + "]: for ", Game.getObjectById(energySource).pos);
+                log.object("Empty space found at [" + locations[l].x + "," + locations[l].y + "]");
                 spaces.push(locations[l]);
             }
         }
