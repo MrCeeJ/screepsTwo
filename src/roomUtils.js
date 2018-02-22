@@ -54,6 +54,17 @@ const roomUtils = {
         // TODO: verify this works for positions :)
         return _.reject(miningPositions, s => _.some(usedPositions, s));
     },
+    findStructurePositions: function (room, structureType) {
+        return _(room.find(FIND_STRUCTURES))
+            .filter(s => s.structureType === structureType)
+            .map(s => s.pos)
+            .value();
+    },
+    findStructures: function (room, structureType) {
+        return _(room.find(FIND_STRUCTURES))
+            .filter(s => s.structureType === structureType)
+            .value();
+    },
     getMiningPositions: function (room, energySources) {
         const positions = [];
         const spawns = room.find(FIND_MY_SPAWNS);
@@ -69,7 +80,9 @@ const roomUtils = {
         return positions;
     },
     nonWallPositionsNextToCoordinates: function (room, x, y) {
+        log.message("Checking for spaces by [" + x + "," + y + "]");
         const area = room.lookAtArea(y - 1, x - 1, y + 1, x + 1, true);
+        log.message("Found :", area);
         let spaces = [];
         for (const a in area) {
             if (area[a].type === "terrain" && area[a].terrain !== 'wall' && (x !== area[a].x || y !== area[a].y)) {
@@ -118,18 +131,19 @@ const roomUtils = {
         }
     },
     buildInitialLinks: function (room) {
-        const positions = _(room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_CONTAINER}}))
-            .map(s => s.pos)
-            .value();
+        const positions = this.findStructurePositions(room, STRUCTURE_CONTAINER);
         const spawnIds = Memory.rooms[room.name].spawnIds;
-        for (const pos in positions) {
-            const locations = this.nonWallPositionsNextToCoordinates(positions[pos]);
+        for (let i = 0; i<positions.length; i++) {
+            const p = positions[i];
+            const locations = this.nonWallPositionsNextToCoordinates(room, p.x, p.y);
             const emptyLocations = this.findSpacesWithoutBuildingsOrSites(room, locations);
-            const sortedPositions = _(emptyLocations).sortBy(s => _(s.findPathTo(Game.getObjectById(spawnIds[0]).pos)).size()).first();
-            if (sortedPositions.length > 0) {
-                room.createConstructionSite(sortedPositions[0].x, sortedPositions[0].y, STRUCTURE_LINK);
+            const sortedPositions = _(emptyLocations)
+                .sortBy(s => _(s.getRangeTo(Game.getObjectById(spawnIds[0]).pos)))
+                .first();
+            if (sortedPositions) {
+                room.createConstructionSite(sortedPositions.x, sortedPositions.y, STRUCTURE_LINK);
             } else {
-                log.object("Unable to place link at :", positions[pos]);
+                log.object("Unable to place link at :", p);
             }
         }
     },
@@ -164,10 +178,10 @@ const roomUtils = {
         const spaces = [];
         for (const l in locations) {
             const structures = _(room.lookForAt(LOOK_STRUCTURES, locations[l].x, locations[l].y)).reject(s => s.structureType === STRUCTURE_ROAD).value();
-            const sites = room.lookForAt(LOOK_CONSTRUCTION_SITES, locations[l].x, locations[l].y).reject(s => s.structureType === STRUCTURE_ROAD).value();
+            const sites = _(room.lookForAt(LOOK_CONSTRUCTION_SITES, locations[l].x, locations[l].y)).reject(s => s.structureType === STRUCTURE_ROAD).value();
 
             if (_(structures).size() === 0 && _(sites).size() === 0) {
-                log.object("Empty space found at [" + locations[l].x + "," + locations[l].y + "]");
+                log.message("Empty space found at [" + locations[l].x + "," + locations[l].y + "]");
                 spaces.push(locations[l]);
             }
         }

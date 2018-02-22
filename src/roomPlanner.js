@@ -41,7 +41,7 @@ const BUILD_CONTAINERS = function (room) {
 };
 
 const BUILD_LINK = function (room) {
-    log.message("Attempted to build link in room but function not implemented yet:", room.name);
+    roomUtils.buildInitialLinks(room);
 };
 
 const BUILD_TOWERS = function (room) {

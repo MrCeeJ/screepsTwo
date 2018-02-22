@@ -12,7 +12,6 @@ const log = {
     object: function (message, object) {
         console.log(message ? message : 'object', JSON.stringify(object));
         lastLogTime = Game.time;
-
     },
 
     creep: function (creep, message, override) {
