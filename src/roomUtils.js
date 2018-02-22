@@ -54,6 +54,13 @@ const roomUtils = {
         // TODO: verify this works for positions :)
         return _.reject(miningPositions, s => _.some(usedPositions, s));
     },
+    findNearestLink: function (room, position) {
+        return _(room.find(FIND_STRUCTURES))
+            .filter(s => s.structureType === STRUCTURE_LINK)
+            .sortBy(s => _(s.getRangeTo(position)))
+            .map(s => s.id)
+            .first();
+    },
     findStructurePositions: function (room, structureType) {
         return _(room.find(FIND_STRUCTURES))
             .filter(s => s.structureType === structureType)
@@ -133,7 +140,7 @@ const roomUtils = {
     buildInitialLinks: function (room) {
         const positions = this.findStructurePositions(room, STRUCTURE_CONTAINER);
         const spawnIds = Memory.rooms[room.name].spawnIds;
-        for (let i = 0; i<positions.length; i++) {
+        for (let i = 0; i < positions.length; i++) {
             const p = positions[i];
             const locations = this.nonWallPositionsNextToCoordinates(room, p.x, p.y);
             const emptyLocations = this.findSpacesWithoutBuildingsOrSites(room, locations);
@@ -147,7 +154,14 @@ const roomUtils = {
             }
         }
     },
+    identifyLinks: function (room) {
+        const links = this.findStructures(room, STRUCTURE_LINK);
+        const sortedLinks = _(links)
+            .sortBy(s => _(s.getRangeTo(Game.getObjectById(spawnIds[0]).pos)))
+            .value();
 
+        Memory.rooms[room.name].linkDestinationId = sortedLinks[0].id;
+    },
     nonWallsNextToLocation: function (room, pos) {
         const area = room.lookAtArea((pos.y) - 1, (pos.x) - 1, (pos.y) + 1, (pos.x) + 1, true);
         let spaces = [];

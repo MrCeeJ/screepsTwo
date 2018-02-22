@@ -22,7 +22,7 @@ const screepFactory = {
                             log.message("Unable to spawn " + role, result);
                         }
                         else {
-                            log.object(role +" - "+result+ " under construction!", body);
+                            log.object(role + " - " + result + " under construction!", body);
                         }
                     } else {
                         log.message("Insufficient energy needed :" + this.spawnCost(body) + " found :" + spawns[s].energy);
@@ -57,6 +57,15 @@ const screepFactory = {
         const memory = {role: 'miner', log: false, sourceId: sources[0], position: positions[0]};
         this.spawnScreep(room, body, 'miner', memory);
     },
+    spawnLinkMiner: function (room) {
+        const body = roleMiner.getBody(room.energyCapacityAvailable);
+        const sources = roomUtils.findUnusedSources(room);
+        const positions = roomUtils.findUnusedPositions(room, sources);
+        const linkId = roomUtils.findNearestLink(room, positions[0]);
+        const linkType = linkId === Memory.rooms[room.name].linkDestinationId ? 'DESTINATION' : 'SOURCE';
+        const memory = {role: 'miner', log: false, sourceId: sources[0], position: positions[0], linkId: linkId, linkType: linkType};
+        this.spawnScreep(room, body, 'miner', memory);
+    },
     spawnReplacementMiner: function (room, oldMiner) {
         const body = [];
         for (let part in oldMiner.body) {
@@ -66,7 +75,8 @@ const screepFactory = {
             role: 'miner',
             sourceId: oldMiner.memory.sourceId,
             position: oldMiner.memory.position,
-
+            linkId: oldMiner.memory.linkId,
+            linkType: oldMiner.memory.linkType,
         };
         this.spawnScreep(room, body, 'miner', memory);
 

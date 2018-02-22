@@ -18,7 +18,6 @@ const STATE_INITIALISING = function (creep) {
 const STATE_MOVING = function (creep) {
     if (creep.memory.position) {
         if (creep.pos.x === creep.memory.position.x && creep.pos.y === creep.memory.position.y) {
-            //let target = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
             let target = creep.memory.sourceId;
             const result = creep.harvest(Game.getObjectById(target));
             if (result === OK) {

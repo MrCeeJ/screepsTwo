@@ -105,6 +105,10 @@ const roomManager = {
     },
     spawnMiners: function (room, capacity, profile) {
         if (capacity > 0 && miners.length < profile.maxMiners) {
+            if (Memory.rooms[room.name].linkDestinationId){
+                log.message(room.name + " needs more link miners " + miners.length + " / " + profile.maxMiners);
+                screepFactory.spawnLinkMiner(room);
+            }
             log.message(room.name + " needs more miners " + miners.length + " / " + profile.maxMiners);
             screepFactory.spawnMiner(room);
             return --capacity;
@@ -116,6 +120,10 @@ const roomManager = {
                 }
             });
             if (dyingMiners.length) {
+                // Check for change from regular to link miners
+                if (Memory.rooms[room.name].linkDestinationId && !dyingMiners[0].memory.linkId) {
+                        return capacity;
+                }
                 log.message("Spawning replacement for :" + dyingMiners[0]);
                 screepFactory.spawnReplacementMiner(room, dyingMiners[0]);
                 return --capacity;

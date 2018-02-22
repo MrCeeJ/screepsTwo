@@ -43,6 +43,10 @@ const BUILD_CONTAINERS = function (room) {
 const BUILD_LINK = function (room) {
     roomUtils.buildInitialLinks(room);
 };
+const ACTIVATE_LINK_AND_BUILD_TOWER = function(room) {
+    roomUtils.identifyLinks(room);
+    roomUtils.buildTowers(room, 1);
+};
 
 const BUILD_TOWERS = function (room) {
     roomUtils.buildTowers(room, 1);
@@ -72,7 +76,7 @@ const techPlans = {
     'LEVEL_4': DO_NOTHING,
     'Energy_L3': BUILD_EXTENSIONS,
     'Link_L0': BUILD_LINK,
-    'Tower_L1': BUILD_TOWERS,
+    'Tower_L1': ACTIVATE_LINK_AND_BUILD_TOWER,
     'LEVEL_5': DO_NOTHING,
     'Energy_L4': BUILD_EXTENSIONS,
     'Link_L1': BUILD_LINK,
