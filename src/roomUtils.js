@@ -281,6 +281,12 @@ const roomUtils = {
             while (!found) {
                 position = roomUtils.getNextLatticePosition(spawnPos, latticePosition);
                 latticePosition++;
+                if (position.x < 2 || 
+                    position.y < 2 ||
+                    position.x > 47 ||
+                    position.y > 47) {
+                 continue;   
+                }
                 const result = position.createConstructionSite(structure);
                 if (result === 0) {
                     found = true;
