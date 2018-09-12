@@ -7,7 +7,14 @@ const lattice = [{x: 1, y: 1}, {x: -1, y: 1}, {x: -1, y: -1}, {x: 1, y: -1}, {x:
     {x: 4, y: -4}, {x: 4, y: -2}, {x: 4, y: 0}, {x: 4, y: 2}, {x: 4, y: 4},
     {x: 2, y: 4}, {x: 0, y: 4}, {x: -2, y: 4},
     {x: -4, y: 4}, {x: -4, y: 2}, {x: -4, y: 0}, {x: -4, y: -2}, {x: -4, y: -4},
-    {x: 2, y: -4}, {x: 0, y: -4}, {x: -2, y: -4}];
+    {x: 2, y: -4}, {x: 0, y: -4}, {x: -2, y: -4},
+    {x: 1, y: -5}, {x: 2, y: -5}, {x: 3, y: -5}, {x: 4, y: -5},
+    {x: -1, y: -5}, {x: -2, y: -5}, {x: -3, y: -5}, {x: -4, y: -5},
+    {x: 1, y: 5}, {x: 3, y: 5}, {x: -1, y: 5}, {x: 3, y: 5},
+    {x: 5, y: 1}, {x: 5, y: 3}, {x: 5, y: 5},
+    {x: 5, y: -1}, {x: 5, y: -3}, {x: 5, y: -5},
+    {x: -5, y: 1}, {x: -5, y: 3}, {x: -5, y: 5},
+    {x: -5, y: -1}, {x: -5, y: -3}, {x: -5, y: -5},];
 
 const roomUtils = {
 
@@ -281,11 +288,11 @@ const roomUtils = {
             while (!found) {
                 position = roomUtils.getNextLatticePosition(spawnPos, latticePosition);
                 latticePosition++;
-                if (position.x < 2 || 
+                if (position.x < 2 ||
                     position.y < 2 ||
                     position.x > 47 ||
                     position.y > 47) {
-                 continue;   
+                    continue;
                 }
                 const result = position.createConstructionSite(structure);
                 if (result === 0) {
