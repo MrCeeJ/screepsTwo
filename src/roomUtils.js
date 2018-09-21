@@ -73,7 +73,7 @@ const roomUtils = {
     findNearestLink: function (room, position) {
         return _(room.find(FIND_STRUCTURES))
             .filter(s => s.structureType === STRUCTURE_LINK)
-            .sortBy(s => _(s.getRangeTo(position)))
+            .sortBy(s => _(s.pos.getRangeTo(position)))
             .map(s => s.id)
             .first();
     },
