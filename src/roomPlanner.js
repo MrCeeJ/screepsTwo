@@ -4,7 +4,7 @@ const tech = require('tech');
 
 const planner = {
     planRoom: function (room) {
-        let sites = roomUtils.getNonRoadConstructionSiteTypes(room);
+        const sites = roomUtils.getNonRoadConstructionSiteTypes(room);
         if (sites.length === 0) {
             const oldTech = Memory.rooms[room.name].techLevel;
             const newTech = tech.calculateTechLevel(room);

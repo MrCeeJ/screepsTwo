@@ -18,6 +18,10 @@
   "devDependencies": {
     "grunt-contrib-clean": "^1.1.0",
     "grunt-contrib-copy": "^1.0.0",
-    "grunt-rsync": "^2.0.1"
+    "grunt-rsync": "^2.0.1",
+    "jest": "^23.6.0"
+  },
+  "scripts": {
+    "test": "jest"
   }
 }
